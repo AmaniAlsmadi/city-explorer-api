@@ -1,40 +1,42 @@
 'use strict'
 
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
 
-const westherData = require('./data/weather.json');
+const weatherData = require("./data/weather.json");
+  console.log(weatherData);
+  
+app.get("/weather", (req, res) => {
+  let searchQuery = req.query.searchQuery;
 
+  const city = weatherData.find(
+    (city) => city.city_name.toLowerCase() === searchQuery.toLowerCase()
+  );
 
-app.get('/weather', (req, res) => {
-    let searchQuery = req.query.searchQuery;
+  try {
+    const weatherArr = city.data.map((day) => new Forecast(day));
+    res.status(200).send(weatherArr);
+  } catch (error) {
+    res.status(500).send("Something went wrong");
+  }
+});
 
-    const city = westherData.find(city => city.city_name.toLowerCase() === searchQuery.toLowerCase());
-try {
-    const weatherArr = city.data.map(item=>new Forecast(item)) 
-
-    res.status(200).send(weatherArr)
-
-}catch (error){
-handelError(error,res)
-
-} 
-})
-
- function handelError(error,res){
-    res.status(500).send('Something went wrong');
+app.get("", (req, res) => {
+  res.status(404).send("Page not found");
+});
+class Forecast {
+  constructor(object) {
+    this.date = object.valid_date;
+    this.description = object.weather.description;
+  }
 }
-class Forecast{
-    constructor(day){
-        this.date = day.valid_date;
-        this.description = day.weather.description;
 
-    }
-}
-app.listen(process.env.PORT, () => {
-    console.log(` Server listening on port ${process.env.PORT}`);
-  });
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(` Server listening on port ${PORT}`);
+});
