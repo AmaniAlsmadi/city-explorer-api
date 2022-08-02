@@ -17,7 +17,7 @@ app.get('/weather', (req, res) => {
 try {
     const weatherArr = city.data.map(item=>new Forecast(item)) 
 
-    res.status(200).send(city)
+    res.status(200).send(weatherArr)
 
 }catch (error){
 handelError(error,res)
@@ -36,6 +36,5 @@ class Forecast{
     }
 }
 app.listen(process.env.PORT, () => {
-
-    console.log('working server!')
-});
+    console.log(` Server listening on port ${process.env.PORT}`);
+  });
