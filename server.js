@@ -1,5 +1,5 @@
 'use strict'
-
+//our basic code
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -7,35 +7,44 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const weatherData = require("./data/weather.json");
+
+//read weather.json file
+const weatherData = require("./data/weather.json"); 
   console.log(weatherData);
   
+  // create our API using get (our path,function handler have reg&res )
 app.get("/weather", (req, res) => {
-  let searchQuery = req.query.searchQuery;
+  const searchQuery = req.query.searchQuery;
+  const lat =req.query.lat;
+  const lon =req.query.lon;
 
-  const city = weatherData.find(
-    (city) => city.city_name.toLowerCase() === searchQuery.toLowerCase()
-  );
+  
+  const cityArr = weatherData.find(item => item.city_name.toLowerCase() === searchQuery.toLowerCase());
 
   try {
-    const weatherArr = city.data.map((day) => new Forecast(day));
-    res.status(200).send(weatherArr);
+    const cityData = cityArr.data.map((item) => new Forecast(item));
+    //we use (res) to having the data back from respone
+    res.status(200).send(cityData);
   } catch (error) {
-    res.status(500).send("Something went wrong");
+    handlerError(error,res)
   }
 });
 
-app.get("", (req, res) => {
+app.get("*", (req, res) => {
   res.status(404).send("Page not found");
 });
+function handlerError(error,res){
+  res.status(500).send({error:"Something went wrong"});
+}
 class Forecast {
-  constructor(object) {
-    this.date = object.valid_date;
-    this.description = object.weather.description;
+  constructor(day) {
+    this.date = day.valid_date;
+    this.description = day.weather.description;
+   
   }
 }
 
-
+//call the PORT
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(` Server listening on port ${PORT}`);
