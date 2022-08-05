@@ -3,19 +3,14 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const app = express();
+app.use(cors());
+
 const axios =require('axios');
 const {handlerWeather} = require('./modules/weatherModule');
 
 const { handlerMovie } = require("./modules/movieModule");
 
-const app = express();
-app.use(cors());
-
-
-//read weather.json file
-//const weatherData = require("./data/weather.json"); 
-// console.log(weatherData);
-  
   // create our API using get (our path,function handler have reg&res )
   app.get("/weather", handlerWeather );
   app.get("/movies", handlerMovie );

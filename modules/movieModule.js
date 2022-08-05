@@ -7,7 +7,7 @@ async function handlerMovie (req, res) {
     const {searchQuery} = req.query;
    
     const movieArr = await axios.get(`https://api.themoviedb.org/3/movie/550?api_key=${process.env.MOVIE_API_KEY}&query=${searchQuery}`)
- 
+    console.log(movieArr);
     try {
       const movieData = movieArr.data.map ((item) => new Movie(item));
 
