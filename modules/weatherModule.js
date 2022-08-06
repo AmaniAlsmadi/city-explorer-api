@@ -1,5 +1,6 @@
 
-const axios =require('axios');
+const { default: axios } = require("axios");
+const handlerError = require('../server')
 
 
 async function handlerWeather (req, res) {
@@ -10,8 +11,8 @@ async function handlerWeather (req, res) {
   
     
     //const cityArr = weatherData.find(item => item.city_name.toLowerCase() === searchQuery.toLowerCase());
-    const cityArr = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&lat=${lat}&lon=${lon}`)
-   console.log(cityArr.data);
+    const cityArr = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lat=${lat}&lon=${lon}`)
+   
   
     try {
       const cityData = cityArr.data.data.map ((item) => new Forecast(item));

@@ -1,15 +1,23 @@
 'use strict'
 //our basic code
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-const app = express();
-app.use(cors());
 
 const axios =require('axios');
 const {handlerWeather} = require('./modules/weatherModule');
 
 const { handlerMovie } = require("./modules/movieModule");
+
+const app = express();
+app.use(cors());
+
+//call the PORT
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(` Server listening on port ${PORT}`);
+});
 
   // create our API using get (our path,function handler have reg&res )
   app.get("/weather", handlerWeather );
@@ -23,8 +31,4 @@ function handlerError(error,res){
   res.status(500).send({error:"Something went wrong"});
 }
 
-//call the PORT
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(` Server listening on port ${PORT}`);
-});
+
