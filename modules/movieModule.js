@@ -5,9 +5,10 @@ const handlerError = require('../server')
 
 async function handlerMovie (req, res) {
     
-    const {searchQuery} = req.query;
-   
-    const movieArr = await axios.get(`https://api.themoviedb.org/3/movie/550?api_key=${process.env.MOVIE_API_KEY}&query=${searchQuery}`)
+  const searchQuery = req.query.query;
+  console.log(searchQuery)
+   let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${searchQuery}`
+    const movieArr = await axios.get(url)
     
     try {
       const movieData = movieArr.data.results.map ((item) => new Movie(item));
@@ -15,6 +16,7 @@ async function handlerMovie (req, res) {
       res.status(200).send(movieData);
     } catch (error) {
       handlerError(error,res)
+      
     }
   };
  
